@@ -1,5 +1,5 @@
 
-/* Base (unchanged except small spacing tweaks) */
+/* Base */
 body {
   background: linear-gradient(135deg, #eef2ff, #f8fafc);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -25,7 +25,7 @@ body {
 /* Compact label + input grid */
 .form-row {
   display: grid;
-  grid-template-columns: 150px 1fr;   /* tighter label column */
+  grid-template-columns: 150px 1fr;  /* tighter label column */
   align-items: center;
   column-gap: 10px;
   row-gap: 6px;
@@ -46,12 +46,17 @@ body {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-/* Inline field layout for input + mini-control (e.g., toggle) */
+/* Inline field layout */
 .inline-field {
   display: grid;
-  grid-template-columns: 1fr auto;  /* input grows, toggle takes minimal space */
+  grid-template-columns: 1fr auto; /* input first, control second (used for Interest row) */
   align-items: center;
   gap: 8px;
+}
+
+/* For RC row, toggle first then input — make columns compact+flex */
+.inline-field.inline-rc {
+  grid-template-columns: auto 1fr;  /* toggle compact, input flex */
 }
 
 /* Interest toggle (compact version) */
@@ -74,13 +79,14 @@ body {
   font-weight: 600;
 }
 
-/* RC toggle (same style; text kept minimal) */
+/* RC toggle compact and no-wrap */
 .toggle-label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
 }
 .toggle-label input { display: none; }
 .toggle-slider {
@@ -103,10 +109,12 @@ body {
 }
 .toggle-label input:checked + .toggle-slider { background: linear-gradient(135deg, #6366f1, #4f46e5); }
 .toggle-label input:checked + .toggle-slider::after { transform: translateX(20px); }
-.toggle-text { font-size: 13px; color: #374151; font-weight: 600; }
 
-/* RC input sized to look neat next to toggle */
-.rc-inline-input { min-width: 120px; }
+/* RC input should not overflow and should fill remaining space */
+.rc-inline-input {
+  width: 100%;
+  min-width: 0; /* allows shrinking within grid */
+}
 
 /* Button */
 .calculate-btn {
@@ -122,7 +130,7 @@ body {
 }
 .calculate-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
-/* Results (unchanged) */
+/* Results */
 .emi-box { text-align: center; margin-bottom: 18px; }
 .emi-box .label { font-size: 13px; color: #6b7280; }
 .emi-value { font-size: 32px; font-weight: 700; color: #111827; }

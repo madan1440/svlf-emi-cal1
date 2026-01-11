@@ -11,31 +11,38 @@ function formatINR(n) {
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form');
 
-  // --- Highlight selected %/yr or ₹/yr button in BLUE ---
+  // --- Blue highlight for %/yr and ₹/yr buttons ---
   const updateInterestButtons = () => {
     document.querySelectorAll('.interest-toggle label').forEach(label => {
       const input = label.querySelector('input');
       const span  = label.querySelector('span');
       if (!span) return;
-      if (input.checked) {
-        span.classList.add('active');
-      } else {
-        span.classList.remove('active');
-      }
+      span.classList.toggle('active', !!input.checked);
     });
   };
 
-  // Run once on load
-  updateInterestButtons();
+  // Ensure clicking the "button" (label) sets the radio and updates UI
+  document.querySelectorAll('.interest-toggle .interest-option').forEach(option => {
+    option.addEventListener('click', (e) => {
+      const input = option.querySelector('input');
+      if (!input) return;
+      input.checked = true;
+      updateInterestButtons();
+      if (typeof toggleInterestFields === 'function') toggleInterestFields();
+      e.preventDefault(); // prevent text selection glitches on double tap
+    });
+  });
 
-  // Attach change listeners to both radios (in both groups)
+  // Also update on native radio change (keyboard, etc.)
   document.querySelectorAll('input[name="interest_type"]').forEach(radio => {
     radio.addEventListener('change', () => {
       updateInterestButtons();
-      // Keep visibility toggle in sync
       if (typeof toggleInterestFields === 'function') toggleInterestFields();
     });
   });
+
+  // Initial state
+  updateInterestButtons();
 
   // Optional: visually disable RC amount when toggle is off (non-functional change)
   const includeRc = document.getElementById('includeRc');

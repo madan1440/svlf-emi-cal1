@@ -66,15 +66,12 @@ body {
   grid-template-columns: auto 1fr;  /* toggle compact, input flex */
 }
 
-/* Interest toggle (compact version) */
+/* Interest toggle using robust buttons */
 .interest-toggle {
   display: inline-flex;
   gap: 6px;
 }
-
-/* Make spans look like buttons */
-.interest-toggle.compact span {
-  display: inline-block;
+.it-btn {
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -84,20 +81,22 @@ body {
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.interest-toggle.compact span:hover {
-  background: #e5e7eb;
-}
-
-/* Active highlight in BLUE */
-.interest-toggle.compact span.active {
-  background: #4f46e5;          /* Indigo-600 */
+.it-btn:hover { background: #e5e7eb; }
+.it-btn.active {
+  background: #4f46e5;
   border-color: #4f46e5;
   color: #ffffff;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.20);
 }
 
-/* Hide the native radios */
-.interest-toggle input { display: none; }
+/* Visually hide helper radios but keep them accessible for forms */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
 
 /* RC toggle compact and no-wrap */
 .toggle-label {

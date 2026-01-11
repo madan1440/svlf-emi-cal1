@@ -8,16 +8,16 @@
 
   <!-- CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="style.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 
   <script>
     // Show/hide interest input groups based on selected interest type
     function toggleInterestFields() {
-      const type = document.querySelector('input[name="interest_type"]:checked')?.value || 'percent';
+      const typeInput = document.querySelector('input[name="interest_type"]:checked');
+      const type = typeInput ? typeInput.value : 'percent';
       const percentGroup = document.getElementById('interest_percent_group');
       const rupeesGroup  = document.getElementById('interest_rupees_group');
 
-      // Use 'grid' so the row's compact layout stays intact when shown
       percentGroup.style.display = (type === 'percent') ? 'grid' : 'none';
       rupeesGroup.style.display  = (type === 'rupees')  ? 'grid' : 'none';
     }
@@ -30,7 +30,6 @@
       <h2 class="title">SVLF EMI Calculator</h2>
 
       <form class="row g-3">
-
         <!-- 1) Loan Amount -->
         <div class="form-row">
           <label class="form-label" for="loanAmount">Loan Amount (₹)</label>
@@ -49,38 +48,42 @@
           <input id="pcPercent" type="number" class="form-control" name="pc_percent" value="10" min="0" step="0.01" />
         </div>
 
-        <!-- 4) Interest (% per year) with inline Interest Type toggle -->
-        <div class="form-row" id="interest_percent_group" aria-hidden="false">
+        <!-- 4) Interest (% per year) with inline Interest Type toggle (buttons) -->
+        <div class="form-row" id="interest_percent_group">
           <label class="form-label" for="interestPercent">Interest (%/year)</label>
           <div class="inline-field">
             <input id="interestPercent" type="number" class="form-control" name="interest_percent" value="24" min="0" step="0.01" />
-            <div class="interest-toggle compact" id="interestTogglePercent">
-              <label class="interest-option" data-value="percent">
-                <input type="radio" name="interest_type" value="percent" checked />
-                <span>%/yr</span>
-              </label>
-              <label class="interest-option" data-value="rupees">
-                <input type="radio" name="interest_type" value="rupees" />
-                <span>₹/yr</span>
-              </label>
+
+            <!-- Visible buttons (robust interaction) -->
+            <div class="interest-toggle compact">
+              <button type="button" class="it-btn active" data-value="percent">%/yr</button>
+              <button type="button" class="it-btn" data-value="rupees">₹/yr</button>
+            </div>
+
+            <!-- Hidden radios (calculation reads these) -->
+            <div class="visually-hidden">
+              <input type="radio" id="it_percent_A" name="interest_type" value="percent" checked>
+              <input type="radio" id="it_rupees_A"  name="interest_type" value="rupees">
             </div>
           </div>
         </div>
 
-        <!-- 5) Interest (₹ per year) with inline Interest Type toggle -->
-        <div class="form-row" id="interest_rupees_group" aria-hidden="true" style="display:none;">
+        <!-- 5) Interest (₹ per year) with inline Interest Type toggle (same buttons mirrored) -->
+        <div class="form-row" id="interest_rupees_group" style="display:none;">
           <label class="form-label" for="interestRupees">Interest (₹/year)</label>
           <div class="inline-field">
             <input id="interestRupees" type="number" class="form-control" name="interest_rupees" value="2" min="0" step="0.01" />
-            <div class="interest-toggle compact" id="interestToggleRupees">
-              <label class="interest-option" data-value="percent">
-                <input type="radio" name="interest_type" value="percent" />
-                <span>%/yr</span>
-              </label>
-              <label class="interest-option" data-value="rupees">
-                <input type="radio" name="interest_type" value="rupees" checked />
-                <span>₹/yr</span>
-              </label>
+
+            <!-- Same visible buttons (they control the same radios) -->
+            <div class="interest-toggle compact">
+              <button type="button" class="it-btn" data-value="percent">%/yr</button>
+              <button type="button" class="it-btn active" data-value="rupees">₹/yr</button>
+            </div>
+
+            <!-- Hidden radios (same group name) -->
+            <div class="visually-hidden">
+              <input type="radio" id="it_percent_B" name="interest_type" value="percent">
+              <input type="radio" id="it_rupees_B"  name="interest_type" value="rupees" checked>
             </div>
           </div>
         </div>
@@ -135,7 +138,11 @@
           <div class="label">Processing Charges</div>
           <div class="value">₹ <span id="processingAmount"></span></div>
         </div>
-       <div class="result-tile">
+        <div class="result-tile">
+          <div class="label">R.C Charges</div>
+          <div class="value">₹ <span id="rcAmount"></span></div>
+        </div>
+        <div class="result-tile">
           <div class="label">Financed Amount</div>
           <div class="value">₹ <span id="financedAmount"></span></div>
         </div>
@@ -147,4 +154,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-

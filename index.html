@@ -14,8 +14,8 @@
     // Show/hide interest input groups based on selected interest type
     function toggleInterestFields() {
       const type = document.querySelector('input[name="interest_type"]:checked').value;
-      document.getElementById('interest_percent_group').style.display = (type === 'percent') ? 'block' : 'none';
-      document.getElementById('interest_rupees_group').style.display = (type === 'rupees') ? 'block' : 'none';
+      document.getElementById('interest_percent_group').style.display = (type === 'percent') ? 'grid' : 'none';
+      document.getElementById('interest_rupees_group').style.display = (type === 'rupees') ? 'grid' : 'none';
     }
     document.addEventListener('DOMContentLoaded', toggleInterestFields);
   </script>
@@ -27,64 +27,71 @@
 
     <form class="row g-3">
 
-      <!-- Loan Amount -->
+      <!-- 1) Loan Amount -->
       <div class="form-row">
         <label class="form-label" for="loanAmount">Loan Amount (₹)</label>
         <input id="loanAmount" type="number" class="form-control" name="loan" value="20000" min="0" inputmode="decimal">
       </div>
 
-      <!-- Tenure -->
+      <!-- 2) Tenure -->
       <div class="form-row">
         <label class="form-label" for="tenureMonths">Tenure (months)</label>
         <input id="tenureMonths" type="number" class="form-control" name="months" value="12" min="1">
       </div>
 
-      <!-- Processing Charges -->
+      <!-- 3) Processing Charges -->
       <div class="form-row">
         <label class="form-label" for="pcPercent">Processing Charges (%)</label>
         <input id="pcPercent" type="number" class="form-control" name="pc_percent" value="10" min="0" step="0.01">
       </div>
 
-      <!-- Interest Type -->
-      <div class="form-row">
-        <span class="form-label">Interest Type</span>
-        <div class="interest-toggle">
-          <label>
-            <input type="radio" name="interest_type" value="percent" checked onclick="toggleInterestFields()">
-            <span>% per year</span>
-          </label>
-          <label>
-            <input type="radio" name="interest_type" value="rupees" onclick="toggleInterestFields()">
-            <span>₹ per year</span>
-          </label>
+      <!-- 4) Interest (% per year) with inline Interest Type toggle in the same row -->
+      <div class="form-row" id="interest_percent_group">
+        <label class="form-label" for="interestPercent">Interest (%/year)</label>
+        <div class="inline-field">
+          <input id="interestPercent" type="number" class="form-control" name="interest_percent" value="24" min="0" step="0.01">
+          <div class="interest-toggle compact">
+            <label>
+              <input type="radio" name="interest_type" value="percent" checked onclick="toggleInterestFields()">
+              <span>%/yr</span>
+            </label>
+            <label>
+              <input type="radio" name="interest_type" value="rupees" onclick="toggleInterestFields()">
+              <span>₹/yr</span>
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- Interest (% per year) -->
-      <div class="form-row" id="interest_percent_group">
-        <label class="form-label" for="interestPercent">Interest (% per year)</label>
-        <input id="interestPercent" type="number" class="form-control" name="interest_percent" value="24" min="0" step="0.01">
-      </div>
-
-      <!-- Interest (₹ per year) -->
+      <!-- 5) Interest (₹ per year) with inline Interest Type toggle in the same row -->
       <div class="form-row" id="interest_rupees_group" style="display:none;">
-        <label class="form-label" for="interestRupees">Interest (₹ per year)</label>
-        <input id="interestRupees" type="number" class="form-control" name="interest_rupees" value="2" min="0" step="0.01">
+        <label class="form-label" for="interestRupees">Interest (₹/year)</label>
+        <div class="inline-field">
+          <input id="interestRupees" type="number" class="form-control" name="interest_rupees" value="2" min="0" step="0.01">
+          <div class="interest-toggle compact">
+            <label>
+              <input type="radio" name="interest_type" value="percent" onclick="toggleInterestFields()">
+              <span>%/yr</span>
+            </label>
+            <label>
+              <input type="radio" name="interest_type" value="rupees" checked onclick="toggleInterestFields()">
+              <span>₹/yr</span>
+            </label>
+          </div>
+        </div>
       </div>
 
-      <!-- R.C Charges -->
+      <!-- 6) R.C single compact row: toggle + 'Include R.C' text + entry box -->
       <div class="form-row">
-        <label class="form-label" for="rcAmount">R.C (Registration Charges)</label>
-        <input id="rcAmount" type="number" class="form-control" name="rc_amount" value="600" min="0" step="1" placeholder="₹ 600">
-      </div>
-
-      <!-- Include R.C Toggle -->
-      <div class="form-row">
-        <label class="toggle-label">
-          <input type="checkbox" name="rc_include" checked>
-          <span class="toggle-slider"></span>
-          <span class="toggle-text">Include R.C</span>
-        </label>
+        <label class="form-label" for="rcAmount">Include R.C</label>
+        <div class="inline-field">
+          <label class="toggle-label no-extra-text" for="includeRc">
+            <input id="includeRc" type="checkbox" name="rc_include" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">Include R.C</span>
+          </label>
+          <input id="rcAmount" type="number" class="form-control rc-inline-input" name="rc_amount" value="600" min="0" step="1" placeholder="₹">
+        </div>
       </div>
 
       <!-- Action -->
@@ -126,8 +133,7 @@
   </div>
 </div>
 
-<!-- Correct JS include -->
+<!-- JS include -->
 <script src="script.js"></script>
 </body>
 </html>
-

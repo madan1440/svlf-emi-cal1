@@ -1,3 +1,4 @@
+
 // Format numbers in en-IN with 2 decimals
 function formatINR(n) {
   if (!isFinite(n)) return '0.00';
@@ -7,19 +8,54 @@ function formatINR(n) {
   }).format(n);
 }
 
-// Toggle interest fields already defined inline in HTML
-
-// Main calculation logic
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form');
 
+  // --- Highlight selected %/yr or ₹/yr button in BLUE ---
+  const updateInterestButtons = () => {
+    document.querySelectorAll('.interest-toggle label').forEach(label => {
+      const input = label.querySelector('input');
+      const span  = label.querySelector('span');
+      if (!span) return;
+      if (input.checked) {
+        span.classList.add('active');
+      } else {
+        span.classList.remove('active');
+      }
+    });
+  };
+
+  // Run once on load
+  updateInterestButtons();
+
+  // Attach change listeners to both radios (in both groups)
+  document.querySelectorAll('input[name="interest_type"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      updateInterestButtons();
+      // Keep visibility toggle in sync
+      if (typeof toggleInterestFields === 'function') toggleInterestFields();
+    });
+  });
+
+  // Optional: visually disable RC amount when toggle is off (non-functional change)
+  const includeRc = document.getElementById('includeRc');
+  const rcAmountInput = document.getElementById('rcAmount');
+  const syncRcState = () => {
+    const enabled = includeRc.checked;
+    rcAmountInput.disabled = !enabled;
+    rcAmountInput.classList.toggle('disabled', !enabled);
+  };
+  includeRc.addEventListener('change', syncRcState);
+  syncRcState(); // initialize
+
+  // --- Main calculation logic (unchanged) ---
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     // Read inputs safely
-    const loan = parseFloat(form.loan.value || '0');
-    const months = parseInt(form.months.value || '0', 10);
-    const pcPercent = parseFloat(form.pc_percent.value || '0');
+    const loan      = parseFloat(form.loan.value ?? '0');
+    const months    = parseInt(form.months.value ?? '0', 10);
+    const pcPercent = parseFloat(form.pc_percent.value ?? '0');
 
     // Basic validation
     if (!months || months < 1) {
@@ -37,17 +73,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Interest type
     const interestType = form.querySelector('input[name="interest_type"]:checked').value;
     let annualInterestPercent = 0;
-
     if (interestType === 'percent') {
-      annualInterestPercent = parseFloat(form.interest_percent.value || '0');
+      annualInterestPercent = parseFloat(form.interest_percent.value ?? '0');
     } else {
-      const annualInterestRupees = parseFloat(form.interest_rupees.value || '0');
+      const annualInterestRupees = parseFloat(form.interest_rupees.value ?? '0');
       // Mapping per your hint: 1 ₹ = 12% per annum
       annualInterestPercent = annualInterestRupees * 12;
     }
 
     // R.C
-    const rcAmount = parseFloat(form.rc_amount.value || '0');
+    const rcAmount  = parseFloat(form.rc_amount.value ?? '0');
     const rcInclude = form.rc_include.checked;
 
     // Financed amount: Loan + Processing + (R.C if included)

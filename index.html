@@ -2,138 +2,155 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>SVLF EMI Calculator</title>
 
-  <!-- Correct CSS links -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <!-- CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
 
   <script>
     // Show/hide interest input groups based on selected interest type
     function toggleInterestFields() {
       const type = document.querySelector('input[name="interest_type"]:checked').value;
-      document.getElementById('interest_percent_group').style.display = (type === 'percent') ? 'grid' : 'none';
-      document.getElementById('interest_rupees_group').style.display = (type === 'rupees') ? 'grid' : 'none';
+      const percentGroup = document.getElementById('interest_percent_group');
+      const rupeesGroup  = document.getElementById('interest_rupees_group');
+
+      // Use 'grid' so the row's compact layout stays intact when shown
+      percentGroup.style.display = (type === 'percent') ? 'grid' : 'none';
+      rupeesGroup.style.display  = (type === 'rupees')  ? 'grid' : 'none';
     }
     document.addEventListener('DOMContentLoaded', toggleInterestFields);
   </script>
 </head>
 <body>
-<div class="app-container">
-  <div class="calculator-card">
-    <h2 class="title">SVLF EMI Calculator</h2>
+  <div class="app-container">
+    <div class="calculator-card">
+      <h2 class="title">SVLF EMI Calculator</h2>
 
-    <form class="row g-3">
+      <form class="row g-3">
+        <!-- 1) Loan Amount -->
+        <div class="form-row">
+          <label class="form-label" for="loanAmount">Loan Amount (₹)</label>
+          <input id="loanAmount" type="number" class="form-control" name="loan" value="20000" min="0" inputmode="decimal" />
+        </div>
 
-      <!-- 1) Loan Amount -->
-      <div class="form-row">
-        <label class="form-label" for="loanAmount">Loan Amount (₹)</label>
-        <input id="loanAmount" type="number" class="form-control" name="loan" value="20000" min="0" inputmode="decimal">
-      </div>
+        <!-- 2) Tenure -->
+        <div class="form-row">
+          <label class="form-label" for="tenureMonths">Tenure (months)</label>
+          <input id="tenureMonths" type="number" class="form-control" name="months" value="12" min="1" />
+        </div>
 
-      <!-- 2) Tenure -->
-      <div class="form-row">
-        <label class="form-label" for="tenureMonths">Tenure (months)</label>
-        <input id="tenureMonths" type="number" class="form-control" name="months" value="12" min="1">
-      </div>
+        <!-- 3) Processing Charges -->
+        <div class="form-row">
+          <label class="form-label" for="pcPercent">Processing Charges (%)</label>
+          <input id="pcPercent" type="number" class="form-control" name="pc_percent" value="10" min="0" step="0.01" />
+        </div>
 
-      <!-- 3) Processing Charges -->
-      <div class="form-row">
-        <label class="form-label" for="pcPercent">Processing Charges (%)</label>
-        <input id="pcPercent" type="number" class="form-control" name="pc_percent" value="10" min="0" step="0.01">
-      </div>
-
-      <!-- 4) Interest (% per year) with inline Interest Type toggle in the same row -->
-      <div class="form-row" id="interest_percent_group">
-        <label class="form-label" for="interestPercent">Interest (%/year)</label>
-        <div class="inline-field">
-          <input id="interestPercent" type="number" class="form-control" name="interest_percent" value="24" min="0" step="0.01">
-          <div class="interest-toggle compact">
-            <label>
-              <input type="radio" name="interest_type" value="percent" checked onclick="toggleInterestFields()">
-              <span>%/yr</span>
-            </label>
-            <label>
-              <input type="radio" name="interest_type" value="rupees" onclick="toggleInterestFields()">
-              <span>₹/yr</span>
-            </label>
+        <!-- 4) Interest (% per year) with inline Interest Type toggle in the same row -->
+        <div class="form-row" id="interest_percent_group">
+          <label class="form-label" for="interestPercent">Interest (%/year)</label>
+          <div class="inline-field">
+            <input id="interestPercent" type="number" class="form-control" name="interest_percent" value="24" min="0" step="0.01" />
+            <div class="interest-toggle compact">
+              <label>
+                <input type="radio" name="interest_type" value="percent" checked onclick="toggleInterestFields()" />
+                <span>%/yr</span>
+              </label>
+              <label>
+                <input type="radio" name="interest_type" value="rupees" onclick="toggleInterestFields()" />
+                <span>₹/yr</span>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 5) Interest (₹ per year) with inline Interest Type toggle in the same row -->
-      <div class="form-row" id="interest_rupees_group" style="display:none;">
-        <label class="form-label" for="interestRupees">Interest (₹/year)</label>
-        <div class="inline-field">
-          <input id="interestRupees" type="number" class="form-control" name="interest_rupees" value="2" min="0" step="0.01">
-          <div class="interest-toggle compact">
-            <label>
-              <input type="radio" name="interest_type" value="percent" onclick="toggleInterestFields()">
-              <span>%/yr</span>
-            </label>
-            <label>
-              <input type="radio" name="interest_type" value="rupees" checked onclick="toggleInterestFields()">
-              <span>₹/yr</span>
-            </label>
+        <!-- 5) Interest (₹ per year) with inline Interest Type toggle in the same row -->
+        <div class="form-row" id="interest_rupees_group" style="display:none;">
+          <label class="form-label" for="interestRupees">Interest (₹/year)</label>
+          <div class="inline-field">
+            <input id="interestRupees" type="number" class="form-control" name="interest_rupees" value="2" min="0" step="0.01" />
+            <div class="interest-toggle compact">
+              <label>
+                <input type="radio" name="interest_type" value="percent" onclick="toggleInterestFields()" />
+                <span>%/yr</span>
+              </label>
+              <label>
+                <input type="radio" name="interest_type" value="rupees" checked onclick="toggleInterestFields()" />
+                <span>₹/yr</span>
+              </label>
+            </div>
           </div>
         </div>
+
+        <!-- 6) R.C single compact row: label + toggle + entry box (no duplicate text inside toggle) -->
+        <div class="form-row">
+          <label class="form-label" for="rcAmount">Include R.C</label>
+          <div class="inline-field inline-rc">
+            <label class="toggle-label" for="includeRc">
+              <input id="includeRc" type="checkbox" name="rc_include" checked />
+              <span class="toggle-slider"></span>
+              <!-- no inner text to avoid duplication -->
+            </label>
+
+            <input
+              id="rcAmount"
+              type="number"
+              class="form-control rc-inline-input"
+              name="rc_amount"
+              value="600"
+              min="0"
+              step="1"
+              placeholder="₹"
+              aria-label="R.C amount"
+            />
+          </div>
+        </div>
+
+        <!-- Action -->
+        <div class="col-12">
+          <button class="btn calculate-btn" type="submit">Calculate EMI</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results -->
+    <div id="resultBox" class="result-card d-none">
+      <div class="emi-box">
+        <div class="label">Monthly EMI</div>
+        <div class="emi-value">₹ <span id="emi"></span></div>
       </div>
 
-      <!-- 6) R.C single compact row: toggle + 'Include R.C' text + entry box -->
-      <div class="form-row">
-        <label class="form-label" for="rcAmount">Include R.C</label>
-        <div class="inline-field">
-          <label class="toggle-label no-extra-text" for="includeRc">
-            <input id="includeRc" type="checkbox" name="rc_include" checked>
-            <span class="toggle-slider"></span>
-            <span class="toggle-text">Include R.C</span>
-          </label>
-          <input id="rcAmount" type="number" class="form-control rc-inline-input" name="rc_amount" value="600" min="0" step="1" placeholder="₹">
+      <div class="result-grid">
+        <div class="result-tile">
+          <div class="label">Total Payable</div>
+          <div class="value">₹ <span id="totalPayable"></span></div>
+        </div>
+        <div class="result-tile">
+          <div class="label">Total Interest</div>
+          <div class="value">₹ <span id="totalInterest"></span></div>
+        </div>
+        <div class="result-tile">
+          <div class="label">Processing Charges</div>
+          <div class="value">₹ <span id="processingAmount"></span></div>
+        </div>
+        <div class="result-tile">
+          <div class="label">R.C Charges</div>
+          <div class="value">₹ <span id="rcAmount"></span></div>
+        </div>
+        <div class="result-tile">
+          <div class="label">Financed Amount</div>
+          <div class="value">₹ <span id="financedAmount"></span></div>
         </div>
       </div>
-
-      <!-- Action -->
-      <div class="col-12">
-        <button class="btn calculate-btn" type="submit">Calculate EMI</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Results -->
-  <div id="resultBox" class="result-card d-none">
-    <div class="emi-box">
-      <div class="label">Monthly EMI</div>
-      <div class="emi-value">₹ <span id="emi"></span></div>
-    </div>
-
-    <div class="result-grid">
-      <div class="result-tile">
-        <div class="label">Total Payable</div>
-        <div class="value">₹ <span id="totalPayable"></span></div>
-      </div>
-      <div class="result-tile">
-        <div class="label">Total Interest</div>
-        <div class="value">₹ <span id="totalInterest"></span></div>
-      </div>
-      <div class="result-tile">
-        <div class="label">Processing Charges</div>
-        <div class="value">₹ <span id="processingAmount"></span></div>
-      </div>
-      <div class="result-tile">
-        <div class="label">R.C Charges</div>
-        <div class="value">₹ <span id="rcAmount"></span></div>
-      </div>
-      <div class="result-tile">
-        <div class="label">Financed Amount</div>
-        <div class="value">₹ <span id="financedAmount"></span></div>
-      </div>
     </div>
   </div>
-</div>
 
-<!-- JS include -->
-<script src="script.js"></script>
+  <!-- JS -->
+  <script src="script.js"></script>
 </body>
 </html>

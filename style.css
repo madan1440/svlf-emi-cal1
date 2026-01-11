@@ -18,9 +18,9 @@ body {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   border-radius: 20px;
-  padding: 24px;                 /* slightly tighter than before */
+  padding: 24px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;           /* tighter gap */
+  margin-bottom: 20px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .calculator-card:hover,
@@ -36,7 +36,7 @@ body {
   font-size: 13px;
   font-weight: 600;
   color: #374151;
-  margin: 0;                     /* remove extra vertical gap */
+  margin: 0; /* remove extra vertical gap */
 }
 
 /* === Compact two-column rows: label + input === */
@@ -54,7 +54,7 @@ body {
   border-radius: 12px;
   border: 1px solid #d1d5db;
   padding: 8px 10px;                 /* smaller padding */
-  font-size: 16px;                   /* keeps mobile keyboard from zooming */
+  font-size: 16px;                   /* prevents mobile zoom */
   height: 36px;                      /* compact height */
   transition: border-color 0.3s ease;
 }
@@ -63,7 +63,7 @@ body {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-/* Interest toggle stays horizontal, resized a bit */
+/* Interest toggle compact */
 .interest-toggle {
   display: inline-flex;
   gap: 8px;
@@ -85,9 +85,6 @@ body {
   font-weight: 600;
 }
 
-/* Hint (unchanged if you add any) */
-.hint { font-size: 12px; color: #6b7280; margin-top: 4px; }
-
 /* Primary button compact */
 .calculate-btn {
   width: 100%;
@@ -95,7 +92,7 @@ body {
   color: #fff;
   border: none;
   border-radius: 14px;
-  padding: 12px;                    /* slightly smaller */
+  padding: 12px;
   font-weight: 600;
   font-size: 15px;
   transition: opacity 0.3s ease, transform 0.2s ease;
@@ -123,7 +120,7 @@ body {
 .result-tile .label { font-size: 12px; color: #6b7280; }
 .result-tile .value { font-size: 18px; font-weight: 600; }
 
-/* R.C toggle styles (unchanged) */
+/* R.C toggle */
 .rc-toggle { margin-top: 6px; }
 .toggle-label {
   display: inline-flex;
@@ -165,7 +162,7 @@ body {
   font-weight: 600;
 }
 
-/* Responsive: stack on very small screens for accessibility */
+/* Responsive: stack rows on very small screens for accessibility */
 @media (max-width: 400px) {
   .form-row {
     grid-template-columns: 1fr;   /* label top, input bottom */

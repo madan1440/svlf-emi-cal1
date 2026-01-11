@@ -50,7 +50,7 @@
         </div>
 
         <!-- 4) Interest (% per year) with inline Interest Type toggle -->
-        <div class="form-row" id="interest_percent_group">
+        <div class="form-row" id="interest_percent_group" aria-hidden="false">
           <label class="form-label" for="interestPercent">Interest (%/year)</label>
           <div class="inline-field">
             <input id="interestPercent" type="number" class="form-control" name="interest_percent" value="24" min="0" step="0.01" />
@@ -68,7 +68,7 @@
         </div>
 
         <!-- 5) Interest (₹ per year) with inline Interest Type toggle -->
-        <div class="form-row" id="interest_rupees_group" style="display:none;">
+        <div class="form-row" id="interest_rupees_group" aria-hidden="true" style="display:none;">
           <label class="form-label" for="interestRupees">Interest (₹/year)</label>
           <div class="inline-field">
             <input id="interestRupees" type="number" class="form-control" name="interest_rupees" value="2" min="0" step="0.01" />
@@ -147,3 +147,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+

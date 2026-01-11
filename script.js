@@ -11,51 +11,35 @@ function formatINR(n) {
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form');
 
-  // --- Blue highlight for %/yr and ₹/yr buttons ---
-  const updateInterestButtons = () => {
-    document.querySelectorAll('.interest-toggle label').forEach(label => {
-      const input = label.querySelector('input');
-      const span  = label.querySelector('span');
-      if (!span || !input) return;
-      span.classList.toggle('active', input.checked);
+  // --- Interest toggle: robust buttons controlling hidden radios ---
+  const interestButtons = document.querySelectorAll('.it-btn');
+
+  // Helper: set selected interest across BOTH hidden radio groups
+  const setInterestType = (value) => {
+    // Update radios
+    document.querySelectorAll('input[name="interest_type"]').forEach(r => {
+      r.checked = (r.value === value);
     });
+    // Update button highlight
+    interestButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.value === value);
+    });
+    // Show/hide groups
+    if (typeof toggleInterestFields === 'function') toggleInterestFields();
   };
 
-  // ✅ Single-click reliable handler: programmatically click radio and dispatch change
-  document.querySelectorAll('.interest-toggle .interest-option').forEach(option => {
-    option.addEventListener('click', () => {
-      const input = option.querySelector('input');
-      if (!input) return;
-
-      // Only act if we are actually changing the selection
-      if (!input.checked) {
-        input.checked = true;
-
-        // Fire a native-like change event so listeners run immediately
-        const evt = new Event('change', { bubbles: true });
-        input.dispatchEvent(evt);
-      }
-
-      // Update UI highlight
-      updateInterestButtons();
-
-      // Show/Hide the relevant interest row
-      if (typeof toggleInterestFields === 'function') toggleInterestFields();
+  // Wire buttons (single click)
+  interestButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      setInterestType(btn.dataset.value);
     });
   });
 
-  // Also keep support for keyboard/assistive technology
-  document.querySelectorAll('input[name="interest_type"]').forEach(radio => {
-    radio.addEventListener('change', () => {
-      updateInterestButtons();
-      if (typeof toggleInterestFields === 'function') toggleInterestFields();
-    });
-  });
+  // Initial state from radios (default = percent)
+  const initialRadio = document.querySelector('input[name="interest_type"]:checked');
+  setInterestType(initialRadio ? initialRadio.value : 'percent');
 
-  // Initial state
-  updateInterestButtons();
-
-  // --- Optional RC visual disable (unchanged) ---
+  // --- Optional: visually disable RC amount when toggle is off ---
   const includeRc = document.getElementById('includeRc');
   const rcAmountInput = document.getElementById('rcAmount');
   const syncRcState = () => {
@@ -70,10 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
+    // Read inputs safely
     const loan      = parseFloat(form.loan.value ?? '0');
     const months    = parseInt(form.months.value ?? '0', 10);
     const pcPercent = parseFloat(form.pc_percent.value ?? '0');
 
+    // Basic validation
     if (!months || months < 1) {
       alert('Please enter a valid tenure (months ≥ 1).');
       return;
@@ -83,31 +69,45 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Processing charges amount
     const processingAmount = loan * (pcPercent / 100);
 
-    const interestType = form.querySelector('input[name="interest_type"]:checked').value;
+    // Interest type
+    const interestType = (document.querySelector('input[name="interest_type"]:checked')?.value) || 'percent';
     let annualInterestPercent = 0;
     if (interestType === 'percent') {
       annualInterestPercent = parseFloat(form.interest_percent.value ?? '0');
     } else {
       const annualInterestRupees = parseFloat(form.interest_rupees.value ?? '0');
+      // Mapping per your hint: 1 ₹ = 12% per annum
       annualInterestPercent = annualInterestRupees * 12;
     }
 
+    // R.C
     const rcAmount  = parseFloat(form.rc_amount.value ?? '0');
     const rcInclude = form.rc_include.checked;
 
+    // Financed amount: Loan + Processing + (R.C if included)
     const financedAmount = loan + processingAmount + (rcInclude ? rcAmount : 0);
+
+    // Flat-rate interest over tenure
     const totalInterest = financedAmount * (annualInterestPercent / 100) * (months / 12);
+
+    // Monthly EMI (flat)
     const emi = (financedAmount + totalInterest) / months;
+
+    // Total payable
     const totalPayable = financedAmount + totalInterest;
 
+    // Render results
     setText('emi', formatINR(emi));
     setText('totalPayable', formatINR(totalPayable));
     setText('totalInterest', formatINR(totalInterest));
     setText('processingAmount', formatINR(processingAmount));
     setText('rcAmount', formatINR(rcAmount));
     setText('financedAmount', formatINR(financedAmount));
+
+    // Show result box
     document.getElementById('resultBox').classList.remove('d-none');
   });
 });

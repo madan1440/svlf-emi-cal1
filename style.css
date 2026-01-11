@@ -1,20 +1,14 @@
 
-/* Modern UI base */
+/* Base (unchanged except small spacing tweaks) */
 body {
   background: linear-gradient(135deg, #eef2ff, #f8fafc);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: #111827;
   margin: 0;
 }
+.app-container { max-width: 420px; margin: 40px auto; padding: 0 16px; }
 
-.app-container {
-  max-width: 420px;
-  margin: 40px auto;
-  padding: 0 16px;
-}
-
-.calculator-card,
-.result-card {
+.calculator-card, .result-card {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   border-radius: 20px;
@@ -23,39 +17,28 @@ body {
   margin-bottom: 20px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.calculator-card:hover,
-.result-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
-}
+.calculator-card:hover, .result-card:hover { transform: translateY(-4px); box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12); }
 
 .title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
-.subtitle { font-size: 14px; color: #6b7280; margin-bottom: 18px; }
+.form-label { font-size: 13px; font-weight: 600; color: #374151; margin: 0; }
 
-.form-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #374151;
-  margin: 0; /* remove extra vertical gap */
-}
-
-/* === Compact two-column rows: label + input === */
+/* Compact label + input grid */
 .form-row {
   display: grid;
-  grid-template-columns: 160px 1fr;   /* label width + input flex */
+  grid-template-columns: 150px 1fr;   /* tighter label column */
   align-items: center;
   column-gap: 10px;
   row-gap: 6px;
-  margin-bottom: 8px;                 /* tight vertical rhythm */
+  margin-bottom: 8px;
 }
 
 /* Inputs compact */
 .form-control {
   border-radius: 12px;
   border: 1px solid #d1d5db;
-  padding: 8px 10px;                 /* smaller padding */
-  font-size: 16px;                   /* prevents mobile zoom */
-  height: 36px;                      /* compact height */
+  padding: 8px 10px;
+  font-size: 16px;
+  height: 36px;
   transition: border-color 0.3s ease;
 }
 .form-control:focus {
@@ -63,20 +46,26 @@ body {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-/* Interest toggle compact */
-.interest-toggle {
-  display: inline-flex;
+/* Inline field layout for input + mini-control (e.g., toggle) */
+.inline-field {
+  display: grid;
+  grid-template-columns: 1fr auto;  /* input grows, toggle takes minimal space */
+  align-items: center;
   gap: 8px;
 }
-.interest-toggle label {
-  flex: 0 0 auto;
+
+/* Interest toggle (compact version) */
+.interest-toggle {
+  display: inline-flex;
+  gap: 6px;
+}
+.interest-toggle.compact label {
   background: #f3f4f6;
-  border-radius: 12px;
-  padding: 8px 10px;                /* compact */
-  text-align: center;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 12.5px;
   cursor: pointer;
-  font-size: 13px;
-  transition: background 0.3s ease;
+  transition: background 0.2s ease;
 }
 .interest-toggle label:hover { background: #e5e7eb; }
 .interest-toggle input { display: none; }
@@ -85,47 +74,11 @@ body {
   font-weight: 600;
 }
 
-/* Primary button compact */
-.calculate-btn {
-  width: 100%;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 12px;
-  font-weight: 600;
-  font-size: 15px;
-  transition: opacity 0.3s ease, transform 0.2s ease;
-}
-.calculate-btn:hover { opacity: 0.95; transform: scale(1.02); }
-
-/* Results */
-.emi-box { text-align: center; margin-bottom: 18px; }
-.emi-box .label { font-size: 13px; color: #6b7280; }
-.emi-value { font-size: 32px; font-weight: 700; color: #111827; }
-
-.result-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-.result-tile {
-  background: #f9fafb;
-  border-radius: 14px;
-  padding: 14px;
-  text-align: center;
-  transition: background 0.3s ease;
-}
-.result-tile:hover { background: #f3f4f6; }
-.result-tile .label { font-size: 12px; color: #6b7280; }
-.result-tile .value { font-size: 18px; font-weight: 600; }
-
-/* R.C toggle */
-.rc-toggle { margin-top: 6px; }
+/* RC toggle (same style; text kept minimal) */
 .toggle-label {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
   user-select: none;
 }
@@ -141,31 +94,47 @@ body {
 .toggle-slider::after {
   content: "";
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
   background: #ffffff;
   border-radius: 50%;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   transition: transform 0.2s ease;
 }
-.toggle-label input:checked + .toggle-slider {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-}
-.toggle-label input:checked + .toggle-slider::after {
-  transform: translateX(20px);
-}
-.toggle-text {
-  font-size: 13px;
-  color: #374151;
-  font-weight: 600;
-}
+.toggle-label input:checked + .toggle-slider { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+.toggle-label input:checked + .toggle-slider::after { transform: translateX(20px); }
+.toggle-text { font-size: 13px; color: #374151; font-weight: 600; }
 
-/* Responsive: stack rows on very small screens for accessibility */
+/* RC input sized to look neat next to toggle */
+.rc-inline-input { min-width: 120px; }
+
+/* Button */
+.calculate-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+.calculate-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+/* Results (unchanged) */
+.emi-box { text-align: center; margin-bottom: 18px; }
+.emi-box .label { font-size: 13px; color: #6b7280; }
+.emi-value { font-size: 32px; font-weight: 700; color: #111827; }
+.result-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.result-tile { background: #f9fafb; border-radius: 14px; padding: 14px; text-align: center; transition: background 0.3s ease; }
+.result-tile:hover { background: #f3f4f6; }
+.result-tile .label { font-size: 12px; color: #6b7280; }
+.result-tile .value { font-size: 18px; font-weight: 600; }
+
+/* Responsive: stack rows on very small screens */
 @media (max-width: 400px) {
-  .form-row {
-    grid-template-columns: 1fr;   /* label top, input bottom */
-  }
+  .form-row { grid-template-columns: 1fr; }
+  .inline-field { grid-template-columns: 1fr; gap: 6px; }
   .interest-toggle { flex-wrap: wrap; }
 }
